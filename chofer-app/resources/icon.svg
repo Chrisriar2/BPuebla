@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="200" fill="#0F2A1F"/>
+  <circle cx="512" cy="512" r="330" fill="#2D7D46"/>
+  <!-- camión recolector (silueta blanca) -->
+  <g fill="#ffffff">
+    <rect x="286" y="470" width="30" height="122" rx="8"/>            <!-- brazo/elevador trasero -->
+    <rect x="300" y="440" width="316" height="152" rx="24"/>          <!-- caja -->
+    <rect x="616" y="482" width="112" height="110" rx="18"/>          <!-- cabina -->
+  </g>
+  <rect x="632" y="498" width="52" height="46" rx="6" fill="#2D7D46"/> <!-- ventana -->
+  <!-- ruedas -->
+  <circle cx="386" cy="606" r="50" fill="#14231c"/>
+  <circle cx="386" cy="606" r="21" fill="#ffffff"/>
+  <circle cx="650" cy="606" r="50" fill="#14231c"/>
+  <circle cx="650" cy="606" r="21" fill="#ffffff"/>
+  <!-- franja "BP" -->
+  <text x="512" y="784" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="120" fill="#4ADE80" text-anchor="middle">BP</text>
+</svg>

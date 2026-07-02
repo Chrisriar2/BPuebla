@@ -1,0 +1,36 @@
+# render.yaml — Blueprint de Render para BASTA PUEBLA.
+# Al conectar el repo en Render (New → Blueprint) crea:
+#   - basta-puebla-db  : PostgreSQL (la extensión PostGIS se activa desde el SQL)
+#   - basta-puebla-api : servicio web Node/Express (carpeta backend/)
+# El arranque ejecuta primero db:init (esquema + semilla, idempotente) y luego la API.
+
+databases:
+  - name: basta-puebla-db
+    databaseName: basta_puebla
+    user: basta
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: basta-puebla-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install --omit=dev
+    startCommand: npm run db:init && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: basta-puebla-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      # URL del frontend en Vercel (rellénala en el dashboard tras el primer deploy de Vercel)
+      - key: CORS_ORIGIN
+        sync: false
+      - key: CHOFER_DEMO_PIN
+        value: "1234"

@@ -1,0 +1,19 @@
+# dependencias
+node_modules/
+
+# variables de entorno reales — NUNCA versionar secretos
+.env
+.env.*
+!.env.example
+
+# builds y artefactos
+frontend/dist/
+chofer-app/android/
+chofer-app/www-dist/
+*.apk
+*.aab
+
+# temporales / sistema
+*.log
+.DS_Store
+Thumbs.db

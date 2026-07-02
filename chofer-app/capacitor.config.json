@@ -1,0 +1,14 @@
+{
+  "appId": "com.oosl.bastapuebla.chofer",
+  "appName": "BASTA Puebla · Chofer",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  },
+  "plugins": {
+    "CapacitorSQLite": {
+      "androidIsEncryption": false
+    }
+  }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  BASTA PUEBLA · Chofer — permite HTTP en claro (cleartext) hacia el servidor
+  de la demo en la LAN (http://192.168.x.x:3000, etc.). Sin esto, Android 9+
+  bloquea las llamadas HTTP no-TLS y la app no puede hablar con el backend.
+
+  Copiar a:  android/app/src/main/res/xml/network_security_config.xml
+  (ver BUILD_APK.md, paso de configuración Android).
+
+  Nota: permitimos cleartext de forma amplia porque la IP del servidor es
+  dinámica (WiFi). Si se quisiera acotar, usar <domain-config> por subred.
+-->
+<network-security-config>
+  <base-config cleartextTrafficPermitted="true">
+    <trust-anchors>
+      <certificates src="system" />
+    </trust-anchors>
+  </base-config>
+</network-security-config>

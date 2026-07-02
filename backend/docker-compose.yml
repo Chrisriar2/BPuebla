@@ -1,0 +1,45 @@
+# BASTA PUEBLA — stack portable (Fase 1).
+# Levanta todo con:  docker compose up --build
+#   - db  : PostgreSQL 16 + PostGIS 3.4  (esquema + semilla en primer arranque)
+#   - api : Node/Express (endpoints de reportes y rutas)
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: basta_db
+    environment:
+      POSTGRES_USER: basta
+      POSTGRES_PASSWORD: basta
+      POSTGRES_DB: basta_puebla
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # esquema (01) y semilla (02) se ejecutan SOLO en el primer arranque
+      # (cuando el volumen db_data está vacío). Orden alfabético.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U basta -d basta_puebla"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: basta_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: basta
+      PGPASSWORD: basta
+      PGDATABASE: basta_puebla
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  db_data:

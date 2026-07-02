@@ -1,0 +1,24 @@
+{
+  "name": "basta-puebla-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BASTA PUEBLA — API backend: Express + PostgreSQL/PostGIS",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:local": "node --env-file=.env src/index.js",
+    "dev": "node --watch --env-file=.env src/index.js",
+    "db:init": "node scripts/db_init.js",
+    "db:init:local": "node --env-file=.env scripts/db_init.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

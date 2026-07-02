@@ -1,0 +1,13 @@
+{
+  "name": "basta-puebla-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BASTA PUEBLA — frontend estático (tablero + PWA ciudadana + app chofer web)",
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node build.js && npx serve dist"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
