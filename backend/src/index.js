@@ -25,8 +25,15 @@ app.use(cors(
 app.use(express.json({ limit: '2mb' }));
 app.use(morgan('dev'));
 
-// --- healthcheck (comprueba también la BD) ---
-app.get('/health', async (req, res) => {
+// --- liveness: ¿vive el proceso? NO toca la BD, así un hipo de Postgres no
+//     hace que la app del chofer crea que el servidor cayó (evita el desvinculado).
+app.get('/health', (req, res) => {
+  res.json({ ok: true, service: 'up' });
+});
+
+// --- readiness: ¿está la BD lista? Aquí sí se consulta. Úsalo para diagnóstico
+//     y monitorización, no para el auto-descubrimiento del cliente.
+app.get('/ready', async (req, res) => {
   try {
     await db.query('SELECT 1');
     res.json({ ok: true, db: 'up' });
@@ -47,7 +54,7 @@ app.get('/', (req, res) => {
       tiempo_real: ['GET /live (SSE)'],
       chofer: ['POST /trucks/:id/telemetry', 'POST /trucks/:id/events', 'GET /trucks/:id/events'],
       auth: ['POST /auth/chofer', 'POST /auth/staff'],
-      salud: ['GET /health'],
+      salud: ['GET /health', 'GET /ready'],
     },
   });
 });
@@ -88,6 +95,7 @@ app.use((err, req, res, next) => {
 (async () => {
   try {
     await db.waitForDb();
+    await db.warmPool();
     console.log('[db] conectado');
     app.listen(PORT, () => console.log(`[api] escuchando en http://localhost:${PORT}`));
   } catch (err) {

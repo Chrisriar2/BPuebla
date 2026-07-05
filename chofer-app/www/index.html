@@ -638,7 +638,19 @@ var CHOFER_ROUTES={"RT-104":{"id":"R-03","name":"La Paz · Volcanes","km":14.5,"
     });
   }
   // revalida la conexión (al volver a primer plano): si la base ya no responde, re-descubre
-  function revalidate(){ probe(API_BASE,900).then(function(){}).catch(function(){ ensureServer(true); }); }
+  // probe con reintentos: no declara caído el server por un solo fallo.
+  // tries intentos separados gapMs; sólo rechaza si TODOS fallan.
+  function probeRetry(base,ms,tries,gapMs){
+    tries=tries||1; gapMs=gapMs||600;
+    return probe(base,ms).catch(function(){
+      if(tries<=1) return Promise.reject();
+      return new Promise(function(r){setTimeout(r,gapMs);})
+        .then(function(){ return probeRetry(base,ms,tries-1,gapMs); });
+    });
+  }
+  // revalida (al volver a primer plano): tolera hipos transitorios de la BD/red;
+  // sólo re-descubre la LAN si el server no responde tras 3 intentos.
+  function revalidate(){ probeRetry(API_BASE,900,3,600).then(function(){}).catch(function(){ ensureServer(true); }); }
 
   // ---- vinculación manual: QR (mlkit) / IP a mano / re-escaneo ----
   function scanQR(){
