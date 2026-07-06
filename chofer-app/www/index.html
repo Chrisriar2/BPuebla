@@ -526,7 +526,7 @@ var CHOFER_ROUTES={"RT-104":{"id":"R-03","name":"La Paz · Volcanes","km":14.5,"
     try{ var qp=new URL(window.location.href).searchParams.get('api'); if(qp)return stripSlash(qp); }catch(e){}
     try{ var ls=localStorage.getItem('bp_api_base'); if(ls)return stripSlash(ls); }catch(e){}
     if(window.BP_API_BASE)return stripSlash(window.BP_API_BASE);
-    return 'http://localhost:3000';
+    return 'https://basta-puebla-api.onrender.com';
   }
   var API_BASE=apiBase();
   // devuelve {status, data}; status 0 = sin conexión (fallback local)
@@ -627,8 +627,13 @@ var CHOFER_ROUTES={"RT-104":{"id":"R-03","name":"La Paz · Volcanes","km":14.5,"
     setConn('buscando');
     var first=[]; var saved=null; try{saved=localStorage.getItem('bp_api_base');}catch(e){}
     if(saved&&!force)first.push(stripSlash(saved));
+<<<<<<< HEAD
     if(window.BP_API_BASE)first.push(stripSlash(window.BP_API_BASE));first.push('http://localhost:3000'); first.push('http://127.0.0.1:3000');
     probeFirst(first,5000).then(useBase).catch(function(){
+=======
+    first.push('https://basta-puebla-api.onrender.com'); first.push('http://127.0.0.1:3000');
+    probeFirst(first,900).then(useBase).catch(function(){
+>>>>>>> 7ad90b19b53800a45d4078adaeaadf91157c92cf
       deviceSubnets(function(prefixes){
         var list=[]; var use=prefixes.length?prefixes:COMMON_SUBNETS;
         use.forEach(function(p){ list=list.concat(subnetHosts(p)); });
