@@ -15,7 +15,7 @@ const PORT = +(process.env.PORT || 3000);
 // El APK del chofer (Capacitor) manda origin http(s)://localhost o
 // capacitor://localhost — se permiten siempre para que la app funcione
 // desde cualquier red sin abrir el CORS al resto del mundo.
-const APP_ORIGINS = ['http://localhost', 'https://localhost', 'capacitor://localhost'];
+const APP_ORIGINS = [/^https?:\/\/localhost(:\d+)?$/, /^capacitor:\/\/localhost$/];
 const corsOrigin = (process.env.CORS_ORIGIN || '*').trim();
 app.use(cors(
   corsOrigin === '*'
