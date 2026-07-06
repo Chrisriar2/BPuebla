@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head><script data-bp-api>window.BP_API_BASE="https://basta-puebla-api.onrender.com";</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>BASTA PUEBLA · App del chofer</title>
@@ -627,8 +627,8 @@ var CHOFER_ROUTES={"RT-104":{"id":"R-03","name":"La Paz · Volcanes","km":14.5,"
     setConn('buscando');
     var first=[]; var saved=null; try{saved=localStorage.getItem('bp_api_base');}catch(e){}
     if(saved&&!force)first.push(stripSlash(saved));
-    first.push('http://localhost:3000'); first.push('http://127.0.0.1:3000');
-    probeFirst(first,900).then(useBase).catch(function(){
+    if(window.BP_API_BASE)first.push(stripSlash(window.BP_API_BASE));first.push('http://localhost:3000'); first.push('http://127.0.0.1:3000');
+    probeFirst(first,5000).then(useBase).catch(function(){
       deviceSubnets(function(prefixes){
         var list=[]; var use=prefixes.length?prefixes:COMMON_SUBNETS;
         use.forEach(function(p){ list=list.concat(subnetHosts(p)); });
@@ -638,19 +638,7 @@ var CHOFER_ROUTES={"RT-104":{"id":"R-03","name":"La Paz · Volcanes","km":14.5,"
     });
   }
   // revalida la conexión (al volver a primer plano): si la base ya no responde, re-descubre
-  // probe con reintentos: no declara caído el server por un solo fallo.
-  // tries intentos separados gapMs; sólo rechaza si TODOS fallan.
-  function probeRetry(base,ms,tries,gapMs){
-    tries=tries||1; gapMs=gapMs||600;
-    return probe(base,ms).catch(function(){
-      if(tries<=1) return Promise.reject();
-      return new Promise(function(r){setTimeout(r,gapMs);})
-        .then(function(){ return probeRetry(base,ms,tries-1,gapMs); });
-    });
-  }
-  // revalida (al volver a primer plano): tolera hipos transitorios de la BD/red;
-  // sólo re-descubre la LAN si el server no responde tras 3 intentos.
-  function revalidate(){ probeRetry(API_BASE,900,3,600).then(function(){}).catch(function(){ ensureServer(true); }); }
+  function revalidate(){ probe(API_BASE,5000).then(function(){}).catch(function(){ ensureServer(true); }); }
 
   // ---- vinculación manual: QR (mlkit) / IP a mano / re-escaneo ----
   function scanQR(){
